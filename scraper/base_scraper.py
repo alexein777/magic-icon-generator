@@ -203,5 +203,3 @@ class BaseScraper(ABC):
         :return: Modified endpoint.
         """
         pass
-
-
