@@ -12,6 +12,8 @@ from PIL import Image
 import bs4
 import numpy as np
 
+from utils.utils import get_timestamp
+
 
 IMG_EXTS = ['.png', '.jpg', '.tiff', '.bmp']
 
@@ -31,24 +33,27 @@ def get_img_name_from_url(url: str) -> str:
     return match.group(1) if match is not None else url[url.rfind('/') + 1:]
 
 
-def save_image_from_url(url: str, dest: os.PathLike, overwrite=False):
+def save_image_from_url(url: str, dest: os.PathLike):
     """
     Downloads an image from a given url and saves is to dest.
     :param url: Image url.
     :param dest: Destination where to store the image.
-    :param overwrite: If image already exists at dest, overwrite it if True.
     :return: None
     """
     try:
-        img = requests.get(url).content
+        res = requests.get(url)
+        if not res.status_code == 200:
+            return
+
+        img = res.content
     except:
         return
 
     img_name = get_img_name_from_url(url)
-    if not overwrite and img_name in os.listdir(dest):
-        return
+    dot_idx = img_name.rfind('.')
+    img_name_full = img_name[:dot_idx] + img_name + '_' + get_timestamp() + img_name[dot_idx:]
 
-    with open(os.path.join(dest, img_name), 'wb') as f:
+    with open(os.path.join(dest, img_name_full), 'wb') as f:
         f.write(img)
 
 
