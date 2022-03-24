@@ -19,10 +19,9 @@ class BaseScraper(ABC):
     Each game-specific web scraper will be responsible to download images from a specific url/game.
     """
 
-    def __init__(self, url: str, scrape_directly: bool, overwrite: bool, log_progress: bool):
+    def __init__(self, url: str, scrape_directly: bool, log_progress: bool):
         self._url = url
         self._scrape_directly = scrape_directly
-        self._overwrite = overwrite
         self._log_progress = log_progress
         self._endpoints = self.get_endpoints()
 
@@ -100,7 +99,7 @@ class BaseScraper(ABC):
                         continue
 
                     img_url = self.preprocess_img_url(src)
-                    save_image_from_url(img_url, dest_folder, overwrite=self._overwrite)
+                    save_image_from_url(img_url, dest_folder)
 
                 curr_url_hrefs_visited = set([])
                 aas = soup.find_all('a')
@@ -144,7 +143,7 @@ class BaseScraper(ABC):
                 if self._log_progress:
                     print(f'Downloading image from {endpoint_processed}...')
 
-                save_image_from_url(endpoint_processed, dest_folder, overwrite=self._overwrite)
+                save_image_from_url(endpoint_processed, dest_folder)
 
         if self.log_progress:
             print('\nDone.')
