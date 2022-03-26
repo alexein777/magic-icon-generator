@@ -73,7 +73,6 @@ class BaseScraper(ABC):
         visited_urls = set([])
         visited_endpoints = set([])
         url_queue = deque([self._url] + endpoints_full)
-        n_downloaded = 0
 
         while len(url_queue) > 0:
             curr_url = url_queue.popleft()
@@ -101,7 +100,6 @@ class BaseScraper(ABC):
                     img_url = self.preprocess_img_url(src)
                     save_image_from_url(img_url, dest_folder)
 
-                curr_url_hrefs_visited = set([])
                 aas = soup.find_all('a')
 
                 for a in aas:
